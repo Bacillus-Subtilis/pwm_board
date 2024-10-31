@@ -64,9 +64,9 @@ void setup() {
   //delay(200);
   
   //delay(2000);
-  duty1 = round(analogRead(ref1))*2500/1024;
-  duty2 = round(analogRead(ref2))*2500/1024;
-  duty3 = round(analogRead(ref3))*2500/1024;
+  duty1 = round(analogRead(ref1))*2500/1023;
+  duty2 = round(analogRead(ref2))*2500/1023;
+  duty3 = round(analogRead(ref3))*2500/1023;
   
 }
 
@@ -82,7 +82,7 @@ void loop() {
   digitalWrite(pwm2,HIGH);
   digitalWrite(pwm3,HIGH);
 
-  long long ntime = micros();
+  unsigned long long ntime = micros();
   short sa = 0;
   while(sa<2500){
     if (sa>duty1) digitalWrite(pwm1,LOW);
@@ -109,9 +109,10 @@ void loop() {
   duty2 = round(analogRead(ref2)*2.4414);
   duty3 = round(analogRead(ref3)*2.4414);
   */
-  duty1 = round(analogRead(ref1))*2500/1024;
-  duty2 = round(analogRead(ref2))*2500/1024;
-  duty3 = round(analogRead(ref3))*2500/1024;
+  delayMicroseconds(1000);
+  duty1 = round(analogRead(ref1))*2500/1023;
+  duty2 = round(analogRead(ref2))*2500/1023;
+  duty3 = round(analogRead(ref3))*2500/1023;
 
   while(sa<20000){
     sa = micros()-ntime;
