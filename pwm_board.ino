@@ -1,4 +1,10 @@
 #include <Wire.h>
+//#include <twi.h>
+//#include <twi_pins.h>
+
+//#include <TimeLib.h>
+
+#include <Wire.h>
 #include <timers.h>
 #include "lcdAQ0802.h"
 
@@ -12,25 +18,25 @@
 #define green 9
 #define blue 10
 
-bool wise = true;
+//bool wise = true;
 short i=0;
-unsigned short duty1,duty2,duty3;
+unsigned int duty1,duty2,duty3;
 
 void mozi(unsigned short duty,short num){
   char disp1[] = "        ";
   char disp2[] = "        ";
   disp1[0]= num + '0';
-  disp1[4]= '0' + round(duty/1000);
-  disp1[5]= '0' + round((duty%1000)/100);
-  disp1[6]= '0' + round((duty%100)/10);
-  disp1[7]= '0' + round(duty%10);
+  disp1[4]= '0' + duty/1000;
+  disp1[5]= '0' + (duty%1000)/100;
+  disp1[6]= '0' + (duty%100)/10;
+  disp1[7]= '0' + duty%10;
   disp2[0]= '0';
   disp2[1]= '.';
-  disp2[2]= '0' + round(duty/250000);
-  disp2[3]= '0' + round(duty/25000%10);
-  disp2[4]= '0' + round(duty/2500%10);
-  disp2[5]= '0' + round(duty/250%10);
-  disp2[6]= '0' + round(duty/25%10);
+  disp2[2]= '0' + duty/250000;
+  disp2[3]= '0' + duty/25000%10;
+  disp2[4]= '0' + duty/2500%10;
+  disp2[5]= '0' + duty/250%10;
+  disp2[6]= '0' + duty/25%10;
   lcdClear();
   lcdInit();
   lcdDisp1(disp1);
@@ -58,13 +64,14 @@ void setup() {
   //delay(200);
   
   //delay(2000);
+  duty1 = round(analogRead(ref1))*2500/1024;
+  duty2 = round(analogRead(ref2))*2500/1024;
+  duty3 = round(analogRead(ref3))*2500/1024;
   
 }
 
 void loop() {
-  duty1 = analogRead(ref1)*25/1024*100;
-  duty2 = analogRead(ref2)*25/1024*100;
-  duty3 = analogRead(ref3)*25/1024*100;
+  
   
   //wise = !wise;
 
@@ -75,7 +82,7 @@ void loop() {
   digitalWrite(pwm2,HIGH);
   digitalWrite(pwm3,HIGH);
 
-  long ntime = micros();
+  long long ntime = micros();
   short sa = 0;
   while(sa<2500){
     if (sa>duty1) digitalWrite(pwm1,LOW);
@@ -86,8 +93,6 @@ void loop() {
   digitalWrite(pwm1,LOW);
   digitalWrite(pwm2,LOW);
   digitalWrite(pwm3,LOW);
-  delayMicroseconds(17500);
-
   
   i++;
   if (i%50==0){
@@ -99,5 +104,20 @@ void loop() {
       mozi(duty3,3);
     }else i=0;
   }
+  /*
+  duty1 = round(analogRead(ref1)*2.4414);
+  duty2 = round(analogRead(ref2)*2.4414);
+  duty3 = round(analogRead(ref3)*2.4414);
+  */
+  duty1 = round(analogRead(ref1))*2500/1024;
+  duty2 = round(analogRead(ref2))*2500/1024;
+  duty3 = round(analogRead(ref3))*2500/1024;
+
+  while(sa<20000){
+    sa = micros()-ntime;
+  }
+
+  
+  
   
 }
